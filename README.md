@@ -83,3 +83,34 @@ The library provides helpers for selecting random items from collections.
 
 - `RandomOfSlice(slice)`: Returns a random element from the provided slice.
 - `RandomOfMap(map)`: Returns a random key from the provided map.
+
+### String Conversion
+
+The `String` function provides a robust way to convert arbitrary values to strings. It handles various interfaces and complex types automatically.
+
+Supported conversions:
+- `encoding.TextMarshaler`
+- `yaml.Marshaler`
+- `fmt.Stringer`
+- Slices and Arrays (comma-separated values)
+- Maps (key=value pairs, sorted by key)
+- Structs (serialized to JSON)
+- Basic types
+
+#### Custom String Conversion
+
+You can customize string conversion for specific types using `StringHook`.
+
+```go
+type MyType struct {
+	Value string
+}
+
+hook := random.NewStringHookFor[MyType](func(v any) (string, error) {
+	return "custom:" + v.(MyType).Value, nil
+})
+
+val := MyType{Value: "test"}
+str, err := random.String(val, hook)
+// str: "custom:test"
+```
