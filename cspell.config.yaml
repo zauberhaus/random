@@ -1,0 +1,16 @@
+ignorePaths:
+  - go.mod
+  - go.sum
+  - .gitignore
+  - cspell.config.yaml
+version: "0.2"
+language: en
+words:
+  - creasty
+  - deepcopy
+  - Enumer
+  - Println
+  - shopspring
+  - stretchr
+  - strs
+  - zauberhaus
