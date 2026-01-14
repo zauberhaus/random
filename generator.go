@@ -18,7 +18,7 @@ var RandomTime = NewRandomGenerator[time.Time](func() (any, error) {
 	end := time.Date(2025, time.December, 31, 23, 59, 59, 0, time.UTC)
 
 	duration := end.Sub(start)
-	randomNanos := random.Int63n(duration.Nanoseconds())
+	randomNanos := random.Int64N(duration.Nanoseconds())
 	randomDuration := time.Duration(randomNanos) * time.Nanosecond
 
 	value := start.Add(randomDuration)
@@ -33,7 +33,7 @@ var RandomRegexp = NewRandomGenerator[*regexp.Regexp](func() (any, error) {
 
 var RandomDuration = NewStrictRandomGenerator[time.Duration](func() (any, error) {
 	duration := 24 * time.Hour
-	randomNanos := random.Int63n(duration.Nanoseconds())
+	randomNanos := random.Int64N(duration.Nanoseconds())
 	value := time.Duration(randomNanos) * time.Nanosecond
 	return value, nil
 })

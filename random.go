@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"maps"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"reflect"
 	"slices"
 	"sync"
@@ -23,13 +23,33 @@ var (
 	mutex = sync.Mutex{}
 	names = map[string]bool{}
 
-	seed   = time.Now().UTC().UnixNano()
-	random = newRandom(seed)
+	random = newRandom()
 )
 
-func newRandom(seed int64) *rand.Rand {
-	random := rand.New(rand.New(rand.NewSource(99)))
-	random.Seed(seed)
+type ConcurrentSource struct {
+	rand.Source
+	mu sync.Mutex
+}
+
+func (c *ConcurrentSource) Uint64() uint64 {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return c.Source.Uint64()
+}
+
+func NewConcurrentSource(source rand.Source) rand.Source {
+	return &ConcurrentSource{
+		Source: source,
+	}
+}
+
+func newRandom() *rand.Rand {
+	seed1 := rand.Uint64()
+	seed2 := uint64(time.Now().UTC().UnixNano())
+	source := NewConcurrentSource(rand.NewPCG(seed1, seed2))
+
+	random := rand.New(source)
 	return random
 }
 
@@ -87,12 +107,12 @@ func Random(t reflect.Type, generators ...RandomGenerator) (any, error) {
 		return ConvertTo(value, t)
 
 	case reflect.Bool:
-		value := random.Intn(2) == 1
+		value := random.IntN(2) == 1
 		return ConvertTo(value, t)
 
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		value := random.Int63()
-		sgn := random.Intn(2)
+		value := random.Int64()
+		sgn := random.IntN(2)
 
 		if sgn == 1 {
 			value *= -1
@@ -102,19 +122,16 @@ func Random(t reflect.Type, generators ...RandomGenerator) (any, error) {
 
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		value := random.Uint64()
-
 		return ConvertTo(value, t)
 
 	case reflect.Float32, reflect.Float64:
 		value := random.Float64()
-
 		value = math.Round(value*100000) / 100000
-
 		return ConvertTo(value, t)
 
 	case reflect.Map:
 		value := reflect.MakeMap(t)
-		cnt := random.Intn(10) + 1
+		cnt := random.IntN(10) + 1
 
 		for range cnt {
 			k, err := Random(t.Key(), generators...)
@@ -132,7 +149,7 @@ func Random(t reflect.Type, generators ...RandomGenerator) (any, error) {
 
 		return ConvertTo(value.Interface(), t)
 	case reflect.Slice:
-		cnt := random.Intn(10) + 1
+		cnt := random.IntN(10) + 1
 		value := reflect.MakeSlice(t, cnt, cnt)
 
 		for i := range cnt {
@@ -192,14 +209,14 @@ func ConvertTo(value any, t reflect.Type) (any, error) {
 }
 
 func RandomOfSlice[Slice ~[]V, V any](s Slice) V {
-	idx := random.Intn(len(s))
+	idx := random.IntN(len(s))
 	return V(s[idx])
 }
 
 func RandomOfMap[Map ~map[K]V, K comparable, V any](m Map) K {
 	keys := slices.Collect(maps.Keys(m))
 
-	idx := random.Intn(len(keys))
+	idx := random.IntN(len(keys))
 	key := keys[idx]
 
 	return K(key)
