@@ -6,10 +6,18 @@ ignorePaths:
 version: "0.2"
 language: en
 words:
+  - boumenot
+  - coverprofile
   - creasty
   - deepcopy
-  - Enumer
-  - Println
+  - enumer
+  - gocover
+  - gotest
+  - gotestfmt
+  - gotesttools
+  - irongut
+  - marocchino
+  - println
   - shopspring
   - stretchr
   - strs
