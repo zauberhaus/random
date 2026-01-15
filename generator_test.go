@@ -45,7 +45,7 @@ func TestRandomRegexp_Can(t *testing.T) {
 	t.Parallel()
 	gen := random.RandomRegexp
 
-	assert.True(t, gen.Can(reflect.TypeOf(&regexp.Regexp{})), "should be true for *egexp")
+	assert.True(t, gen.Can(reflect.TypeOf(&regexp.Regexp{})), "should be true for *regexp.Regexp")
 	assert.False(t, gen.Can(reflect.TypeOf(regexp.Regexp{})), "should be false for regexp.Regexp")
 	assert.False(t, gen.Can(reflect.TypeOf("")), "should be false for string")
 }
