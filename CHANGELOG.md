@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/zauberhaus/random/compare/v1.0.2...v1.1.0) (2026-01-15)
+
+
+### Features
+
+* move String function to sub package ([5a49046](https://github.com/zauberhaus/random/commit/5a49046bd50a43d1ffbfcb542b4928bde1a827be))
+* move String function to sub package ([417e17c](https://github.com/zauberhaus/random/commit/417e17c69972b541827050472da73b5702a1871c))
+
+
+### Bug Fixes
+
+* tests ([7dca867](https://github.com/zauberhaus/random/commit/7dca86700f1fbd386be09abf06bc1874d19e50ba))
+
 ## [1.0.2](https://github.com/zauberhaus/random/compare/v1.0.1...v1.0.2) (2026-01-15)
 
 
