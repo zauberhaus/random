@@ -1,4 +1,4 @@
-package random_test
+package stringer_test
 
 import (
 	"errors"
@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/zauberhaus/random"
+	"github.com/zauberhaus/random/pkg/stringer"
 )
 
 // --- Helper types for testing interfaces ---
@@ -144,7 +144,7 @@ func TestString_Values(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			result, err := random.String(tt.input)
+			result, err := stringer.String(tt.input)
 
 			if tt.expectErr {
 				require.Error(t, err)
@@ -171,7 +171,7 @@ func TestString_Values(t *testing.T) {
 
 func TestString_NonStringerYAML(t *testing.T) {
 	// Special case for yaml.Marshaler that returns a non-string type
-	result, err := random.String(yamlMarshalerNonString{}) // This type is now defined at the package level
+	result, err := stringer.String(yamlMarshalerNonString{}) // This type is now defined at the package level
 	require.NoError(t, err)
 	assert.Equal(t, "12345", result)
 }
@@ -182,7 +182,7 @@ func TestString_JSONMarshalError(t *testing.T) {
 		C chan int
 	}
 
-	_, err := random.String(jsonErrorStruct{C: make(chan int)})
+	_, err := stringer.String(jsonErrorStruct{C: make(chan int)})
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "json: unsupported type: chan int")
 }
@@ -190,7 +190,7 @@ func TestString_JSONMarshalError(t *testing.T) {
 func TestString_SliceWithErrorElement(t *testing.T) {
 	// Special case for a slice containing an element that errors on string conversion
 	slice := []any{1, "two", textMarshalerErrImpl{}}
-	_, err := random.String(slice)
+	_, err := stringer.String(slice)
 	require.Error(t, err)
 	assert.ErrorContains(t, err, "text marshal error")
 }
@@ -198,7 +198,7 @@ func TestString_SliceWithErrorElement(t *testing.T) {
 func TestString_MapWithErrorElement(t *testing.T) {
 	// Special case for a map containing an element that errors on string conversion
 	m := map[string]any{"good": 1, "bad": textMarshalerErrImpl{}}
-	_, err := random.String(m)
+	_, err := stringer.String(m)
 	require.Error(t, err)
 	assert.ErrorContains(t, err, "text marshal error")
 }
@@ -206,7 +206,7 @@ func TestString_MapWithErrorElement(t *testing.T) {
 func TestString_MapWithErrorKey(t *testing.T) {
 	// Special case for a map containing a key that errors on string conversion
 	m := map[any]int{textMarshalerErrImpl{}: 1}
-	_, err := random.String(m)
+	_, err := stringer.String(m)
 	require.Error(t, err)
 	assert.ErrorContains(t, err, "text marshal error")
 }
@@ -226,19 +226,19 @@ func TestString_WithHook(t *testing.T) {
 		return "", errors.New("unexpected type for customStringer")
 	}
 
-	valueHook := random.NewStringHook(reflect.TypeOf(customStringHookType{}), f)
-	pointerHook := random.NewStringHook(reflect.TypeOf(&customStringHookType{}), f)
+	valueHook := stringer.NewStringHook(reflect.TypeOf(customStringHookType{}), f)
+	pointerHook := stringer.NewStringHook(reflect.TypeOf(&customStringHookType{}), f)
 
 	t.Run("with value type hook", func(t *testing.T) {
 		val := customStringHookType{Data: "test"}
-		result, err := random.String(val, valueHook)
+		result, err := stringer.String(val, valueHook)
 		require.NoError(t, err)
 		assert.Equal(t, "hooked:test", result)
 	})
 
 	t.Run("with pointer type hook", func(t *testing.T) {
 		val := &customStringHookType{Data: "pointer_test"}
-		result, err := random.String(val, pointerHook)
+		result, err := stringer.String(val, pointerHook)
 		require.NoError(t, err)
 		assert.Equal(t, "hooked_ptr:pointer_test", result)
 	})
@@ -250,23 +250,23 @@ func TestString_WithHookFor(t *testing.T) {
 	}
 
 	t.Run("with value type hook", func(t *testing.T) {
-		hook := random.NewStringHookFor[customHookType](func(v any) (string, error) {
+		hook := stringer.NewStringHookFor[customHookType](func(v any) (string, error) {
 			return "custom:" + v.(customHookType).Value, nil
 		})
 
 		val := customHookType{Value: "test"}
-		str, err := random.String(val, hook)
+		str, err := stringer.String(val, hook)
 		require.NoError(t, err)
 		assert.Equal(t, "custom:test", str)
 	})
 
 	t.Run("with pointer type hook", func(t *testing.T) {
-		hook := random.NewStringHookFor[*customHookType](func(v any) (string, error) {
+		hook := stringer.NewStringHookFor[*customHookType](func(v any) (string, error) {
 			return "custom_ptr:" + v.(*customHookType).Value, nil
 		})
 
 		val := &customHookType{Value: "pointer_test"}
-		str, err := random.String(val, hook)
+		str, err := stringer.String(val, hook)
 		require.NoError(t, err)
 		assert.Equal(t, "custom_ptr:pointer_test", str)
 	})
