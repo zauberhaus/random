@@ -91,8 +91,11 @@ func TestString_Values(t *testing.T) {
 		{"string", "hello", "hello", false, nil},
 		{"pointer to string", Ptr("world"), "world", false, nil},
 		{"int", 123, "123", false, nil},
+		{"pointer to int", Ptr(123), "123", false, nil},
 		{"bool", true, "true", false, nil},
+		{"pointer to bool", Ptr(true), "true", false, nil},
 		{"float", 3.14, "3.14", false, nil},
+		{"pointer to float", Ptr(0.123), "0.123", false, nil},
 
 		// Nil values
 		{"nil interface", nil, "", false, nil},

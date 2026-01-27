@@ -137,6 +137,10 @@ func String(val any, stringer ...StringHook) (string, error) {
 
 		return string(data), nil
 	default:
+		if isPointer {
+			val = v.Elem().Interface()
+		}
+
 		return fmt.Sprintf("%v", val), nil
 	}
 }
