@@ -1,3 +1,8 @@
+// Copyright 2026 Zauberhaus
+// Licensed to Zauberhaus under one or more agreements.
+// Zauberhaus licenses this file to you under the Apache 2.0 License.
+// See the LICENSE file in the project root for more information.
+
 package stringer
 
 import (
@@ -132,6 +137,10 @@ func String(val any, stringer ...StringHook) (string, error) {
 
 		return string(data), nil
 	default:
+		if isPointer {
+			val = v.Elem().Interface()
+		}
+
 		return fmt.Sprintf("%v", val), nil
 	}
 }

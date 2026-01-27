@@ -1,3 +1,8 @@
+// Copyright 2026 Zauberhaus
+// Licensed to Zauberhaus under one or more agreements.
+// Zauberhaus licenses this file to you under the Apache 2.0 License.
+// See the LICENSE file in the project root for more information.
+
 package stringer_test
 
 import (
@@ -86,8 +91,11 @@ func TestString_Values(t *testing.T) {
 		{"string", "hello", "hello", false, nil},
 		{"pointer to string", Ptr("world"), "world", false, nil},
 		{"int", 123, "123", false, nil},
+		{"pointer to int", Ptr(123), "123", false, nil},
 		{"bool", true, "true", false, nil},
+		{"pointer to bool", Ptr(true), "true", false, nil},
 		{"float", 3.14, "3.14", false, nil},
+		{"pointer to float", Ptr(0.123), "0.123", false, nil},
 
 		// Nil values
 		{"nil interface", nil, "", false, nil},
