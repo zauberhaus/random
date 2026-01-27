@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/zauberhaus/random/compare/v1.1.0...v1.1.1) (2026-01-27)
+
+
+### Bug Fixes
+
+* add license text ([ea57cc8](https://github.com/zauberhaus/random/commit/ea57cc81484f3cd85e0d097b7693f1e5c2885d1d))
+* pointer to standard types ([10aba27](https://github.com/zauberhaus/random/commit/10aba277a073ea6666bef73c31f15060e388f569))
+
 ## [1.1.0](https://github.com/zauberhaus/random/compare/v1.0.2...v1.1.0) (2026-01-15)
 
 
