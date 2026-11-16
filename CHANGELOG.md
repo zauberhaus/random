@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/zauberhaus/random/compare/v1.1.1...v1.1.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* upgrade dependencies and improve release process ([821dddd](https://github.com/zauberhaus/random/commit/821dddd1d24991db0f5a834979fd06810bf05711))
+
 ## [1.1.1](https://github.com/zauberhaus/random/compare/v1.1.0...v1.1.1) (2026-01-27)
 
 
