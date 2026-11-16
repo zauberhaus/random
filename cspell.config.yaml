@@ -7,16 +7,19 @@ version: "0.2"
 language: en
 words:
   - boumenot
+  - covermode
   - coverprofile
   - creasty
   - deepcopy
   - enumer
+  - genproto
   - gocover
   - gotest
   - gotestfmt
   - gotesttools
   - irongut
   - marocchino
+  - nosec
   - println
   - shopspring
   - stretchr

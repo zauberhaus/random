@@ -45,10 +45,12 @@ func NewConcurrentSource(source rand.Source) rand.Source {
 }
 
 func newRandom() *rand.Rand {
+	// #nosec G404 -- non-cryptographic jitter for reconnect backoff
 	seed1 := rand.Uint64()
 	seed2 := uint64(time.Now().UTC().UnixNano())
 	source := NewConcurrentSource(rand.NewPCG(seed1, seed2))
 
+	// #nosec G404 -- non-cryptographic jitter for reconnect backoff
 	random := rand.New(source)
 	return random
 }
